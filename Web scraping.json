@@ -1,0 +1,149 @@
+{
+  "name": "Web scraping",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "https://news.ycombinator.com/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "6c607eb0-0286-448d-87e5-05f244cf6a07",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "extractHtmlContent",
+        "extractionValues": {
+          "values": [
+            {
+              "key": "Titles",
+              "cssSelector": ".titleline>a",
+              "returnArray": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "83abb550-b9cb-4ddc-a884-6502007b0d54",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "jsCode": "const Titles = $input.first().json.Titles;\nlet selectedTitles = Titles.slice(0, 5).join('<br>');\nreturn {\n  json: {\n    Titles: selectedTitles\n  }\n};\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        0
+      ],
+      "id": "6f5f6a37-f85a-428b-8cf0-05482fb3b941",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "recipient@example.com",
+        "subject": "Top 5 news for today",
+        "message": "={{ $json.Titles }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        896,
+        0
+      ],
+      "id": "4164a89c-1610-4df4-9238-53e989ff9fd3",
+      "name": "Send a message",
+      "webhookId": "843dbf94-c3f8-493a-a98c-3b556ffdbc00",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ZbVNgJ6ErzqV1Y4W",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "45c1424c-82b1-49b3-8bb5-18b83dc3f43a",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c47b47e7-6fd9-4a99-859d-f0d5b4dccdba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b5e26bb3c0d88c988e457d58f1a3f085e26a88d2ad5251d0558d2cc7ba9aa004"
+  },
+  "nodeGroups": [],
+  "id": "xmy2OkbE6TYkpIh5",
+  "tags": []
+}
