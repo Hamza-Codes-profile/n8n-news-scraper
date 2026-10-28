@@ -1,5 +1,5 @@
 # Automated Top 5 News Email Digest (n8n Workflow)
-
+![n8n Workflow Layout](workflow_canvas.png)
 A production-ready n8n automation pipeline that handles web data extraction, custom JavaScript processing, and automated reporting via email. 
 
 ## Workflow Overview
